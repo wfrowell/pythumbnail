@@ -1,5 +1,6 @@
 # console only ver for now
 import os, sys, json, re
+sys.path.append('./packages')
 from osuapi import getScore
 from imagegen import imageGen
 from manual import manual
@@ -18,7 +19,7 @@ def main():
 
     score = getScore(url)
     
-    if score.mods.value != 0:
+    if score.mods != []:
         sr = input('Enter the mod weighted star rating of the beatmap.\n> ')
         if sr:
             score.beatmap.__setattr__('difficulty_rating', sr)

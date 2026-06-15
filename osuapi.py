@@ -80,21 +80,25 @@ def getScore(url):
     return api.score_mode(scoreID[1], int(scoreID[0]))
 
 
-def getUser(url: str = str(None), username: str = str(None)) -> User:
+def getUser(url=None, username=None) -> User:
     api = Ossapi(config['ID'], config['SECRET'])
 
     if username:
         return api.user(username)
-    else:
+    elif url:
         uid = convertURL(url)[0]
         return api.user(uid)
+    else:
+        return User()
 
 
-def getBeatmap(url: str = str(None), beatmapHash: str = str(None)) -> Beatmap:
+def getBeatmap(url=None, beatmapHash=None) -> Beatmap:
     api = Ossapi(config['ID'], config['SECRET'])
 
     if beatmapHash:
         return api.beatmap(checksum=beatmapHash)
-    else:
+    elif url:
         bid = convertURL(url)[0]
         return api.beatmap(int(bid))
+    else:
+        return Beatmap()

@@ -1,7 +1,8 @@
 import os, sys, subprocess, json, shutil, requests, tkinter
 import rosu_pp_py as rosu
 from zipfile import *
-from ossapi import Ossapi, Score, Beatmap, Beatmapset
+from ossapi import Ossapi, Score, Beatmap, Beatmapset, mod
+from osrparse import Mod
 from tkinter import filedialog
 from datetime import datetime
 from PIL import Image, ImageEnhance, ImageDraw, ImageFont, ImageColor, ImageFilter
@@ -47,11 +48,17 @@ def __roundCorners(im, rad):
 
 
 def __modIcons(score: Score):
-    if score.mods == 0: return False
+    if len(score.mods) == 0: return False
 
     modlist = []
-    for mod in score.mods:
-        modlist.append(mod.acronym)
+    
+    if isinstance(score.mods[0], str):
+        modlist = score.mods
+        # https://stackoverflow.com/a/9475354
+    else:
+        for mod in score.mods:
+            modlist.append(mod.acronym)
+        
 
     totalWidth = (91 * len(modlist)) - 1
 
@@ -144,7 +151,7 @@ def imageGen(score: Score):
         score.beatmap = Beatmap()
 
     # open background into bkgImage
-    beatmapset_id = score.beatmapset_id
+    beatmapset_id = score.beatmapset.id
     __dlImageFromBeatmapID(beatmapset_id)
     bkgImage = Image.open('tempbkg.jpg').convert('RGBA')
 
