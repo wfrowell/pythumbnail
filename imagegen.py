@@ -1,7 +1,7 @@
 import os, sys, subprocess, json, shutil, requests, tkinter
 import rosu_pp_py as rosu
 from zipfile import *
-from ossapi import Ossapi, Score
+from ossapi import Ossapi, Score, Beatmap, Beatmapset
 from tkinter import filedialog
 from datetime import datetime
 from PIL import Image, ImageEnhance, ImageDraw, ImageFont, ImageColor, ImageFilter
@@ -47,11 +47,11 @@ def __roundCorners(im, rad):
 
 
 def __modIcons(score: Score):
-    if score.mods.value == 0: return False
+    if score.mods == 0: return False
 
     modlist = []
-    for mod in score.mods.decompose():
-        modlist.append(mod.long_name().lower())
+    for mod in score.mods:
+        modlist.append(mod.acronym)
 
     totalWidth = (91 * len(modlist)) - 1
 
@@ -94,16 +94,20 @@ def __tempPath(relative_path):
 
 
 def calculateSR(score: Score):
-    if score.mods.value == 0: return score.beatmap.difficulty_rating
+    if not score.beatmap or not score.beatmapset:
+        print('no beatmap found')
+        return
+    
+    if score.mods == [] and score.beatmap: 
+        return score.beatmap.difficulty_rating
 
     config = json.load(open('config.json'))
-    calc = rosu.Calculator(mods=score.mods.value)
+    calc = rosu.Difficulty(mods=score.mods)
 
     for (dirpath, dirnames, filenames) in os.walk(config['beatmaps_path']):
         for f in filenames:
             if f == f'{score.beatmapset.artist} - {score.beatmapset.title} ({score.beatmapset.creator}) [{score.beatmap.version}].osu':
                 beatmap = rosu.Beatmap(content=f.read())
-                f'{calc.difficulty(beatmap).stars:.2f}'
 
     print(
         'Required beatmap not found in beatmaps folder. Select the .osz or .osu file.'
@@ -113,7 +117,8 @@ def calculateSR(score: Score):
 
         if type(path) is tuple:
             print('exiting without calculating star rating...')
-            return score.beatmap.difficulty_rating
+            if score.beatmap:
+                return score.beatmap.difficulty_rating
         elif path.endswith('.osz'):
             with ZipFile(path) as z:
                 f = z.open(
@@ -128,12 +133,18 @@ def calculateSR(score: Score):
             continue
 
     beatmap = rosu.Beatmap(content=f.read())
-    return f'{calc.difficulty(beatmap).stars:.2f}'
+    return f'{calc.calculate(beatmap).stars:.2f}'
 
 
 def imageGen(score: Score):
+    if not score.beatmapset:
+        score.beatmapset = Beatmapset()
+
+    if not score.beatmap:
+        score.beatmap = Beatmap()
+
     # open background into bkgImage
-    beatmapset_id = score.beatmapset.id
+    beatmapset_id = score.beatmapset_id
     __dlImageFromBeatmapID(beatmapset_id)
     bkgImage = Image.open('tempbkg.jpg').convert('RGBA')
 
