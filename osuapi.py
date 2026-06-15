@@ -69,7 +69,7 @@ def convertURL(url: str):
     elif params[0] == 'scores':  # score [score ID, mode]
         return [params[2], params[1]]
     else:
-        return None
+        return list()
 
 
 def getScore(url):
