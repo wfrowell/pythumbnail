@@ -6,7 +6,8 @@ requires-python = ">=3.11"
 dependencies = [
     "requests",
     "ossapi",
-    "rosu_pp_py"
+    "rosu_pp_py",
+    "pillow"
 ]
 
 [project.optional-dependencies]

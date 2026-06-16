@@ -10,7 +10,7 @@ from byreplay import replay
 def main():
     while True:
         pattern = re.compile(
-            'https:\/\/osu\.ppy\.sh\/scores\/[a-zA-Z]+\/[0-9]+')
+            'https://osu.ppy.sh/scores/[a-zA-Z]+/[0-9]+')
         url = input('Enter the URL of the score: ')
         if pattern.match(url):
             break
