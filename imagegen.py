@@ -67,7 +67,7 @@ def __modIcons(score: Score):
     i = 0
     for modname in modlist:
         modIcon = Image.open(
-            __tempPath( f'assets/Mods/selection-mod-{modname}@2x.png') ).resize( (90, 88) )
+            f'./assets/Mods/selection-mod-{modname}@2x.png').resize( (90, 88) )
         im.paste(modIcon, (i * 91, 0))
         i += 1  # python should have increment/decrement :(
 

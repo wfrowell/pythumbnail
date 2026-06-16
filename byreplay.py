@@ -92,8 +92,8 @@ def replay():
     score.__setattr__('max_combo', int(replay.max_combo))
     score.__setattr__('rank', replayGrade(replay))
     
-    mods = mod.Mod(replay.mods)
-    score.__setattr__('mods', [mods.value[i:i+2] for i in range(0, len(mods.value), 2)])
+    mods = mod.Mod(replay.mods).long_name()
+    score.__setattr__('mods', [mods[i:i+2] for i in range(0, len(mods), 2)])
     
 
     print('Generating image...')
