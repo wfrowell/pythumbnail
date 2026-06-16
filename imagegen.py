@@ -55,9 +55,15 @@ def __modIcons(score: Score):
     if isinstance(score.mods[0], str):
         modlist = score.mods
         # https://stackoverflow.com/a/9475354
+
+        if modlist[0] == 'NM':
+            return False
     else:
         for mod in score.mods:
             modlist.append(mod.acronym)
+
+        if modlist[0] == 'NM':
+            return False
         
 
     totalWidth = (91 * len(modlist)) - 1

@@ -15,8 +15,8 @@ Generates thumbnail images for maryland osu (and hopefully later on, other osu s
 ## TODO (yeah lotsa stuff)
 
 - Refactor to use updated ossapi/rosu structure
-  - new `Mod` class
-  - 
+  - new `NonLegacyMod` class
+  - calculate pp
 - Compile to windows
 
 ## NOT HAPPENING FOR A WHILE
