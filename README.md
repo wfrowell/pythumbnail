@@ -16,8 +16,10 @@ Generates thumbnail images for maryland osu (and hopefully later on, other osu s
 
 ## TODO (yeah lotsa stuff)
 
-- Refactor to use updated ossapi/rosu structure
-  - calculate pp
+- fix mod icon alignment
+- add string safety to output filename
+- fix star rating float
+- make rate change scores work (add new element?)
 - OAuth login
 - Compile to windows
 
