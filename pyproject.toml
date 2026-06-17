@@ -1,6 +1,7 @@
 [project]
 name = "pythumbnail"
-authors = [{name = "wfrowell", email = ""}]
+authors = [{name = "wfrowell", email = "github@imacrazyguy.xyz"}]
+readme = "README.md"
 version = "2.0.1"
 requires-python = ">=3.11"
 dependencies = [
@@ -14,4 +15,14 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest"
+]
+
+[tool.setuptools.packages.find]
+# This tells setuptools to look for your code, but skip these folders
+exclude = [
+    "assets",
+    "hooks",
+    "config.json",
+    "*.spec",
+    ".gitignore"
 ]

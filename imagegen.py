@@ -1,6 +1,5 @@
 import os, sys, json, shutil, requests
 import rosu_pp_py as rosu
-from typing import Any, Mapping
 from ossapi import Score, Beatmap, Beatmapset
 from ossapi.models import NonLegacyMod
 # from osrparse import Mod

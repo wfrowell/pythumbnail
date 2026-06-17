@@ -19,3 +19,5 @@ top1k.py
 *.spec
 *.psd
 hooks
+setup.py
+pythumbnail.egg-info
