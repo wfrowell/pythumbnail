@@ -68,7 +68,7 @@ def convertURL(url: str):
     elif params[0] == 'u' or params[0] == 'users':  # user [user ID]
         return [params[1]]
     elif params[0] == 'scores':  # score [score ID, mode]
-        return [params[2], params[1]]
+        return [params[1]]
     else:
         return list()
 
@@ -77,7 +77,7 @@ def getScore(url):
     # provide this yourself, functionality for lazer login may come tho
     api = Ossapi(config['ID'], config['SECRET'])
     scoreID = convertURL(url)
-    return api.score_mode(scoreID[1], int(scoreID[0]))
+    return api.score(int(scoreID[0]))
 
 
 def getUser(url=None, username=None) -> User:

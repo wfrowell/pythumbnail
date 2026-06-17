@@ -1,11 +1,10 @@
-import os, sys, subprocess, json, shutil, requests, tkinter
+import os, sys, json, shutil, requests
 import rosu_pp_py as rosu
-from zipfile import *
-from ossapi import Ossapi, Score, Beatmap, Beatmapset, mod
-from osrparse import Mod
-from tkinter import filedialog
-from datetime import datetime
-from PIL import Image, ImageEnhance, ImageDraw, ImageFont, ImageColor, ImageFilter
+from typing import Any, Mapping
+from ossapi import Score, Beatmap, Beatmapset
+from ossapi.models import NonLegacyMod
+# from osrparse import Mod
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 # get font with size because yeah
 # possible problem might be that it has to go through the file system more than I'd like, could be an area of slowdown
@@ -72,8 +71,12 @@ def __modIcons(score: Score):
 
     i = 0
     for modname in modlist:
-        modIcon = Image.open(
-            f'./assets/Mods/selection-mod-{modname}@2x.png').resize( (90, 88) )
+        try:
+            modIcon = Image.open(
+                f'./assets/Mods/selection-mod-{modname}@2x.png').resize( (90, 88) )
+        except:
+            continue
+
         im.paste(modIcon, (i * 91, 0))
         i += 1  # python should have increment/decrement :(
 
@@ -106,46 +109,49 @@ def __tempPath(relative_path):
     return os.path.join(base_path, relative_path)
 
 
+def __convertMods(mods: list[NonLegacyMod]) -> list[str]:
+    """converts an ossapi Mod list to a rosu mod dict.
+
+    Args:
+        mods (Mod): the ossapi Mod list
+
+    Returns:
+        list(str): list of mod acronym strings
+    """
+
+    output = []
+    for m in mods:
+        output.append(m.acronym)
+    return output
+
+
 def calculateSR(score: Score):
-    if not score.beatmap or not score.beatmapset:
-        print('no beatmap found')
+    if score.beatmap == None:
+        print('No beatmap found for score.')
         return
-    
-    if score.mods == [] and score.beatmap: 
+
+    if score.mods == []:
         return score.beatmap.difficulty_rating
-
+    
     config = json.load(open('config.json'))
-    calc = rosu.Difficulty(mods=score.mods)
+    beatmap = None
 
-    for (dirpath, dirnames, filenames) in os.walk(config['beatmaps_path']):
-        for f in filenames:
-            if f == f'{score.beatmapset.artist} - {score.beatmapset.title} ({score.beatmapset.creator}) [{score.beatmap.version}].osu':
-                beatmap = rosu.Beatmap(content=f.read())
-
-    print(
-        'Required beatmap not found in beatmaps folder. Select the .osz or .osu file.'
-    )
-    while True:
-        path = filedialog.askopenfilename()
-
-        if type(path) is tuple:
-            print('exiting without calculating star rating...')
-            if score.beatmap:
-                return score.beatmap.difficulty_rating
-        elif path.endswith('.osz'):
-            with ZipFile(path) as z:
-                f = z.open(
-                    f'{score.beatmapset.artist} - {score.beatmapset.title} ({score.beatmapset.creator}) [{score.beatmap.version}].osu'
-                )
+    for dirname in os.listdir(config['beatmaps_path']):
+        # find the folder containing the beatmap
+        if str(dirname).split('/')[-1].startswith( str(score.beatmap.beatmapset_id) ):
+            for f in os.listdir(os.path.join(config['beatmaps_path'], dirname)):
+                if str(f).find(score.beatmap.version) != -1:
+                    beatmap = rosu.Beatmap( path=os.path.join(config['beatmaps_path'], dirname, f) )
+                    break
+        
+        if beatmap != None:
             break
-        elif path.endswith('.osu'):
-            f = open(path)
-            break
-        else:
-            print('invalid file.')
-            continue
 
-    beatmap = rosu.Beatmap(content=f.read())
+    if beatmap == None:
+        print('Beatmap not found locally.')
+        return
+
+    calc = rosu.Difficulty( mods=__convertMods(score.mods) )
     return f'{calc.calculate(beatmap).stars:.2f}'
 
 
@@ -296,6 +302,7 @@ def imageGen(score: Score):
 
     # #.##☆; sr
     starRating = calculateSR(score)  # __scaledDifficulty(score)
+
 
     length = __textLen(draw, f'{starRating}',
                        font=tempFont)  # accounts for star placement as well

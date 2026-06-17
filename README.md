@@ -6,6 +6,8 @@ As far as I know, the exe doesn't work right now. I had a friend test it and the
 Also, it currently can't do any specfic changes to the style or formatting outside of what is hard-coded, among some other user unfriendly aspects of it.
 However, if at your disposal, the linux executable should work. Please submit a pull request or DM me on discord if you experience any other issues not mentioned, or you DON'T experience any of the issues I HAVE mentioned. The latter is more intriguing.
 
+Generating by replay is depracated for now. osrparse doesn't seem to play well with lazer replays, so I don't see a point atm.
+
 ---
 
 ## pythumbnail
@@ -15,8 +17,8 @@ Generates thumbnail images for maryland osu (and hopefully later on, other osu s
 ## TODO (yeah lotsa stuff)
 
 - Refactor to use updated ossapi/rosu structure
-  - new `NonLegacyMod` class
   - calculate pp
+- OAuth login
 - Compile to windows
 
 ## NOT HAPPENING FOR A WHILE
