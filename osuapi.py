@@ -17,6 +17,7 @@ except KeyError:
     print('Select the your osu! beatmaps folder')
     beatmaps_path = filedialog.askdirectory()
 
+    config = dict()
     config['beatmaps_path'] = beatmaps_path
 
     with open('config.json', 'w') as f:
@@ -67,33 +68,37 @@ def convertURL(url: str):
     elif params[0] == 'u' or params[0] == 'users':  # user [user ID]
         return [params[1]]
     elif params[0] == 'scores':  # score [score ID, mode]
-        return [params[2], params[1]]
+        return [params[1]]
     else:
-        return None
+        return list()
 
 
 def getScore(url):
     # provide this yourself, functionality for lazer login may come tho
     api = Ossapi(config['ID'], config['SECRET'])
     scoreID = convertURL(url)
-    return api.score(scoreID[1], scoreID[0])
+    return api.score(int(scoreID[0]))
 
 
-def getUser(url: str = None, username: str = None) -> User:
+def getUser(url=None, username=None) -> User:
     api = Ossapi(config['ID'], config['SECRET'])
 
     if username:
         return api.user(username)
-    else:
+    elif url:
         uid = convertURL(url)[0]
         return api.user(uid)
+    else:
+        return User()
 
 
-def getBeatmap(url: str = None, beatmapHash: str = None) -> Beatmap:
+def getBeatmap(url=None, beatmapHash=None) -> Beatmap:
     api = Ossapi(config['ID'], config['SECRET'])
 
     if beatmapHash:
         return api.beatmap(checksum=beatmapHash)
-    else:
+    elif url:
         bid = convertURL(url)[0]
-        return api.beatmap(bid)
+        return api.beatmap(int(bid))
+    else:
+        return Beatmap()

@@ -1,5 +1,6 @@
-import os, sys, json, re, tkinter
+import rosu_pp_py as rosu
 from ossapi import User, BeatmapCompact, Score, mod, enums
+from ossapi import Mod as OssapiMod
 from osuapi import getScore, getUser, getBeatmap
 from imagegen import imageGen
 from tkinter import filedialog
@@ -74,9 +75,7 @@ def replay():
             replay = Replay.from_path(path)
             break
 
-    pp = input('Enter the pp value of the score, or leave blank.\n> ')
-    if pp:
-        score.__setattr__('pp', float(pp))
+    
 
     beatmap = getBeatmap(beatmapHash=replay.beatmap_hash)
     score.__setattr__('beatmap', beatmap)
@@ -91,8 +90,11 @@ def replay():
     score.__setattr__('accuracy', float(replayAcc(replay)))
     score.__setattr__('max_combo', int(replay.max_combo))
     score.__setattr__('rank', replayGrade(replay))
-    score.__setattr__('mods', mod.Mod(replay.mods))
     
+    # modlist = OssapiMod(replay.mods)
+    # score.__setattr__('mods')
+    
+    # calc = rosu.Performance(mod=)
 
     print('Generating image...')
     
