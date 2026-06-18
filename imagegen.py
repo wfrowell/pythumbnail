@@ -1,4 +1,4 @@
-import os, sys, json, shutil, requests
+import os, sys, json, shutil, requests, re
 import rosu_pp_py as rosu
 from ossapi import Score, Beatmap, Beatmapset
 from ossapi.models import NonLegacyMod
@@ -48,34 +48,30 @@ def __roundCorners(im, rad):
 def __modIcons(score: Score):
     if len(score.mods) == 0: return False
 
-    modlist = []
-    
-    if isinstance(score.mods[0], str):
-        modlist = score.mods
-        # https://stackoverflow.com/a/9475354
-
-        if modlist[0] == 'NM':
-            return False
-    else:
-        for mod in score.mods:
-            modlist.append(mod.acronym)
-
-        if modlist[0] == 'NM':
-            return False
-        
-
-    totalWidth = (91 * len(modlist)) - 1
-
-    im = Image.new('RGBA', (totalWidth, 88))
+    modIconList = []
 
     i = 0
-    for modname in modlist:
-        try:
-            modIcon = Image.open(
-                f'./assets/Mods/selection-mod-{modname}@2x.png').resize( (90, 88) )
-        except:
-            continue
+    for mod in score.mods:
+        if isinstance(mod, str):
+            try:
+                modIconList.append( Image.open(
+                    f'./assets/Mods/selection-mod-{mod}@2x.png').resize( (90, 88) )
+                )
+            except:
+                continue
+        elif isinstance(mod, NonLegacyMod):
+            try:
+                modIconList.append( Image.open(
+                    f'./assets/Mods/selection-mod-{mod.acronym}@2x.png').resize( (90, 88) )
+                )
+            except:
+                continue
 
+
+    totalWidth = (91 * len(modIconList)) - 1
+    im = Image.new('RGBA', (totalWidth, 88))
+
+    for modIcon in modIconList:
         im.paste(modIcon, (i * 91, 0))
         i += 1  # python should have increment/decrement :(
 
@@ -122,6 +118,21 @@ def __convertMods(mods: list[NonLegacyMod]) -> list[str]:
     for m in mods:
         output.append(m.acronym)
     return output
+
+
+def __cleanFilename(filename: str) -> str:
+    # 1. Define invalid characters for Windows/Linux/macOS
+    # < > : " / \ | ? * and control characters (0-31)
+    invalid_chars = r'[<>:"/\\|?*\x00-\x1f]'
+    
+    # 2. Replace invalid characters with an underscore
+    cleaned = re.sub(invalid_chars, '_', filename)
+    
+    # 3. Optional: Prevent filenames from ending in spaces or periods (Windows constraint)
+    cleaned = cleaned.strip('. ')
+    
+    # 4. Fallback if the filename becomes completely empty
+    return cleaned if cleaned else "untitled"
 
 
 def calculateSR(score: Score):
@@ -341,12 +352,13 @@ def imageGen(score: Score):
                   stroke_fill='black')
 
 
-    filename = f'{score.user().username}_{score.beatmapset.title}'
+    filename = __cleanFilename( f'{score.user().username} - {score.beatmapset.title}' )
 
     if not os.path.exists('./output'):
         os.makedirs('./output')
         
     if os.path.exists(f'{os.path.abspath(os.getcwd())}output/{filename}'):
+        print('Replacing existing thumbnail with same filename.')
         os.remove(f'{os.path.abspath(os.getcwd())}output/{filename}')
 
     output.save(f'output/{filename}.png')
