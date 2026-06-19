@@ -22,6 +22,7 @@ Generates thumbnail images for maryland osu (and hopefully later on, other osu s
 - [x] fix star rating float
 - [x] find better star rating star (ideally svg - <https://stackoverflow.com/a/45262575>)
 - [x] make 4+ mod icons stack on top of each other
+- [ ] add a stroke to the star (fml im so stupid i forgot to do that)
 - [ ] OAuth login
 - [ ] make rate change scores work (add new element?)
 - [ ] fix default profile picture sizing
