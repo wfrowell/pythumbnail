@@ -25,10 +25,11 @@ def main():
     print(f'image saved as {outputpath}')
 
 
-if len(sys.argv) > 1:
-    if sys.argv[1].lower() == '-m' or sys.argv[1].lower() == '--manual':
-        manual()
-    elif sys.argv[1].lower() == '-r' or sys.argv[1].lower() == '--replay':
-        replay()
-else:
-    main()
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        if sys.argv[1].lower() == '-m' or sys.argv[1].lower() == '--manual':
+            manual()
+        elif sys.argv[1].lower() == '-r' or sys.argv[1].lower() == '--replay':
+            replay()
+    else:
+        main()
