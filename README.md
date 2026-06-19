@@ -23,12 +23,13 @@ Generates thumbnail images for maryland osu (and hopefully later on, other osu s
 - [ ] fix default profile picture sizing
 - [ ] Add drop shadow to SR star?
 - [ ] Compile to windows
+- [ ] Add multimode support
 - [ ] Videos rendering (https://github.com/Wieku/danser-go)
 - [ ] Create GUI
 
 
 ## NOT HAPPENING FOR A WHILE
 
-- parse .psd files to use as template :scp:
+- parse .psd or gimp files to use as template :scp:
 
 The .spec files are not necessary for runtime dw about them
