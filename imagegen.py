@@ -67,12 +67,24 @@ def __modIcons(score: Score):
             except:
                 continue
 
+    modCount = len(modIconList) - 1
+    modWidth = 91
 
-    totalWidth = (91 * len(modIconList)) - 1
+    # if there's more than 4 mod icons, stack them
+    if modCount >= 4:
+        # the higher this last number is, the tighter the mods will be stacked together
+        modWidth -= modCount * 7
+
+    # adjust width to fit the last mod
+    totalWidth = (modWidth * (modCount - 1) ) + 91 - 1
     im = Image.new('RGBA', (totalWidth, 88))
 
     for modIcon in modIconList:
-        im.paste(modIcon, (i * 91, 0))
+        if i == modCount:
+            # adjust width to fit the last mod
+            im.paste(modIcon, ( ((i - 1) * modWidth) + 91, 0), modIcon)
+        else:
+            im.paste(modIcon, (i * modWidth, 0), modIcon)
         i += 1  # python should have increment/decrement :(
 
     return im
@@ -87,6 +99,13 @@ def __dropShadow(output, coords: tuple, text, textLength, font):
     im = im.filter(ImageFilter.GaussianBlur(7))
 
     output.paste(im, (coords[0] - 10, coords[1]), im)
+
+# maybe possibly thing
+# def __shapeDropShadow(output, coords: tuple, shape: Image.Image):
+#     im = Image.new('RGBA', shape.size)
+#     draw = ImageDraw.Draw(im)
+
+#     draw.bitmap(coords, im.tobitmap())
 
 
 def __textLen(draw, text, font):
@@ -141,7 +160,7 @@ def calculateSR(score: Score):
         return
 
     if score.mods == []:
-        return score.beatmap.difficulty_rating
+        return f'{score.beatmap.difficulty_rating:.2f}'
     
     config = json.load(open('config.json'))
     beatmap = None
@@ -325,8 +344,9 @@ def imageGen(score: Score):
               stroke_width=2,
               stroke_fill='black')
 
-    star = Image.open( __tempPath('assets/SRstar.png') ).resize((80, 80)).convert('RGBA')
-    output.paste(star, (1124 + round(length), 480), star)
+    star = Image.open( __tempPath('assets/SRstar.png') ).resize((60, 60)).convert('RGBA')
+    # __shapeDropShadow(output, (1120, 500), star)
+    output.paste(star, (1124 + round(length), 500), star)
 
     # ####x; combo
     __dropShadow(output, (1120, 600), f'{score.max_combo}x', 1000, tempFont)

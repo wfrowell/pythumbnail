@@ -19,12 +19,13 @@ Generates thumbnail images for maryland osu (and hopefully later on, other osu s
 
 - [x] fix mod icon alignment
 - [x] add string safety to output filename
-- [ ] fix star rating float
-- [ ] find better star rating star (ideally svg - <https://stackoverflow.com/a/45262575>)
-- [ ] make 4+ mod icons stack on top of each other
+- [x] fix star rating float
+- [x] find better star rating star (ideally svg - <https://stackoverflow.com/a/45262575>)
+- [x] make 4+ mod icons stack on top of each other
+- [ ] OAuth login
 - [ ] make rate change scores work (add new element?)
 - [ ] fix default profile picture sizing
-- [ ] OAuth login
+- [ ] Add drop shadow to SR star?
 - [ ] Compile to windows
 
 ## NOT HAPPENING FOR A WHILE
