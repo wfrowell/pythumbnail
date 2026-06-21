@@ -16,6 +16,7 @@ Generates thumbnail images for maryland osu (and hopefully later on, other osu s
 
 ## TODO (yeah lotsa stuff)
 
+- [ ] Scale BPM on DT/rate change scores
 - [x] Compile to windows
 - [x] Add stroke to star
 - [ ] OAuth login
