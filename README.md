@@ -28,6 +28,6 @@ Generates thumbnail images for maryland osu (and hopefully later on, other osu s
 
 ## NOT HAPPENING FOR A WHILE
 
-- parse .psd files to use as template :scp:
+- parse .psd or gimp files to use as template :scp:
 
 The .spec files are not necessary for runtime dw about them
