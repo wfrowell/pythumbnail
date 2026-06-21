@@ -75,9 +75,11 @@ def __modIcons(score: Score):
         # the higher this last number is, the tighter the mods will be stacked together
         modWidth -= modCount * 7
 
-    # adjust width to fit the last mod
-    totalWidth = (modWidth * (modCount - 1) ) + 91 - 1
-    im = Image.new('RGBA', (totalWidth, 88))
+    if modCount >= 1:
+        # adjust width to fit the last mod
+        modWidth = (modWidth * (modCount - 1) ) + 91 - 1
+
+    im = Image.new('RGBA', (modWidth, 88))
 
     for modIcon in modIconList:
         if i == modCount:
@@ -114,13 +116,9 @@ def __textLen(draw, text, font):
 
 # https://stackoverflow.com/a/51061279/20501327
 def __tempPath(relative_path):
-    """ returns a path that works for the compiled code using sys._MEIPASS """
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+    base_path = os.path.abspath(".")
 
-    return os.path.join(base_path, relative_path)
+    return os.path.join( base_path, os.path.normpath(relative_path) )
 
 
 def __convertMods(mods: list[NonLegacyMod]) -> list[str]:
