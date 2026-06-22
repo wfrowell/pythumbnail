@@ -16,12 +16,6 @@ Generates thumbnail images for maryland osu (and hopefully later on, other osu s
 
 ## TODO (yeah lotsa stuff)
 
-- [x] Compile to windows
-- [x] Add stroke to star
-- [x] Scale BPM on DT/rate change scores
-- [x] make rate change scores work (add new element?)
-- [x] fix inconsistent profile picture sizing
-- [ ] ~~Add drop shadow to SR star?~~
 - [ ] OAuth login
 - [ ] Videos rendering (https://github.com/Wieku/danser-go)
 - [ ] Create GUI (or TUI)
