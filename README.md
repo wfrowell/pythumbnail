@@ -16,9 +16,9 @@ Generates thumbnail images for maryland osu (and hopefully later on, other osu s
 
 ## TODO (yeah lotsa stuff)
 
-- [ ] OAuth login
 - [ ] Videos rendering (https://github.com/Wieku/danser-go)
 - [ ] Create GUI (or TUI)
+- [ ] OAuth login
 
 ## NOT HAPPENING FOR A WHILE
 
